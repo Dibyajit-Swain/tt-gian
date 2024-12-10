@@ -12,8 +12,7 @@
    // ========
    // Settings
    // ========
-
-
+   
    //-------------------------------------------------------
    // Build Target Configuration
    //
@@ -64,25 +63,19 @@
          //$mul[7:0] = $val1[7:0] * $val2[7:0];
          //$div[7:0] = $val1[7:0] / $val2[7:0];
          
-         $valid = ($reset) ? 0 :
-                  ($equals_in == 1 && >>1$equals_in == 0) 
-                  ? 1 : 0 ;
-                  
-         
-         
+         $valid = $equals_in && ~>>1$equals_in == 0 
                  
-         
          $out[7:0] = ($reset) ? 0 :
-          (!$valid) 
-          ? (>>1$out) :
-          ($op[1:0] == 2'b00)
-          ? $val1 + $val2 :
-          ($op[1:0] == 2'b01)
-          ? $val1 - $val2 :
-          ($op[1:0] == 2'b10) ? 
-          $val1 * $val2 :
-          ($op[1:0] == 2'b11) ?
-          $val1 / $val2  : $val1 + $val2 ;
+            (!$valid) 
+            ? (>>1$out) :
+            ($op[1:0] == 2'b00)
+            ? $val1 + $val2 :
+            ($op[1:0] == 2'b01)
+            ? $val1 - $val2 :
+            ($op[1:0] == 2'b10) ? 
+            $val1 * $val2 :
+            ($op[1:0] == 2'b11) ?
+            $val1 / $val2  : $val1 + $val2 ;
           // Assert these to end simulation (before Makerchip cycle limit).       
           //$out[7:0] = $reset ? 0 : >>1$out ;    
           // $val1[7:0] = $out[7:0] ;
