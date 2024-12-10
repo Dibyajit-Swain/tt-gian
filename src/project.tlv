@@ -58,10 +58,10 @@
          $op[1:0] = *ui_in[5:4] ;
          $val2[7:0] = {4'b0, *ui_in[3:0]};
          $equals_in = *ui_in[7] ;
-         //$sum[7:0] = $val1[7:0] + $val2[7:0];
-         //$diff[7:0] = $val1[7:0] - $val2[7:0];
-         //$mul[7:0] = $val1[7:0] * $val2[7:0];
-         //$div[7:0] = $val1[7:0] / $val2[7:0];
+         $sum[7:0] = $val1[7:0] + $val2[7:0];
+         $diff[7:0] = $val1[7:0] - $val2[7:0];
+         $mul[7:0] = $val1[7:0] * $val2[7:0];
+         $div[7:0] = $val1[7:0] / $val2[7:0];
          
          $valid = $equals_in && ~>>1$equals_in; 
                  
@@ -69,13 +69,13 @@
             (!$valid) 
             ? (>>1$out) :
             ($op[1:0] == 2'b00)
-            ? $val1 + $val2 :
+            ? $sum :
             ($op[1:0] == 2'b01)
-            ? $val1 - $val2 :
+            ? $diff :
             ($op[1:0] == 2'b10) ? 
-            $val1 * $val2 :
+            $mul :
             ($op[1:0] == 2'b11) ?
-            $val1 / $val2  : $val1 + $val2 ;
+            $div  : $sum ;
           // Assert these to end simulation (before Makerchip cycle limit).       
           //$out[7:0] = $reset ? 0 : >>1$out ;    
           // $val1[7:0] = $out[7:0] ;
