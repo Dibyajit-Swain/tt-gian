@@ -63,7 +63,7 @@
          //$mul[7:0] = $val1[7:0] * $val2[7:0];
          //$div[7:0] = $val1[7:0] / $val2[7:0];
          
-         $valid = $equals_in && ~>>1$equals_in == 0 
+         $valid = $equals_in && ~>>1$equals_in; 
                  
          $out[7:0] = ($reset) ? 0 :
             (!$valid) 
