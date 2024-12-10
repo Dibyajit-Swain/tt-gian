@@ -18,7 +18,7 @@
    //
    var(my_design, tt_um_example)   /// The name of your top-level TT module, to match your info.yml.
    var(target, ASIC)   /// Note, the FPGA CI flow will set this to FPGA.
-   //------------------------------------------------------- 
+   //-------------------------------------------------------
    
    var(in_fpga, 1)   /// 1 to include the demo board. (Note: Logic will be under /fpga_pins/fpga.)
    var(debounce_inputs, 1)
@@ -121,9 +121,7 @@
             $digit == 4'b1111
                ? 8'b01110001 :
                  8'b00000000 ; 
-
-
-
+            
             
             
    // Note that pipesignals assigned here can be found under /fpga_pins/fpga.
@@ -201,83 +199,4 @@ module m5_user_module_name (
    m5_if(m5_in_fpga, ['m5+tt_lab()'], ['m5+calc()'])
 
 \SV
-endmodule
-
-
-
-// Provide a wrapper module to debounce input signals if requested.
-m5_if(m5_debounce_inputs, ['m5_tt_top(m5_my_design)'])
-\SV
-
-
-
-// =======================
-// The Tiny Tapeout module
-// =======================
-
-module m5_user_module_name (
-    input  wire [7:0] ui_in,    // Dedicated inputs - connected to the input switches
-    output wire [7:0] uo_out,   // Dedicated outputs - connected to the 7 segment display
-    m5_if_eq(m5_target, FPGA, ['/']['*'])   // The FPGA is based on TinyTapeout 3 which has no bidirectional I/Os (vs. TT6 for the ASIC).
-    input  wire [7:0] uio_in,   // IOs: Bidirectional Input path
-    output wire [7:0] uio_out,  // IOs: Bidirectional Output path
-    output wire [7:0] uio_oe,   // IOs: Bidirectional Enable path (active high: 0=input, 1=output)
-    m5_if_eq(m5_target, FPGA, ['*']['/'])
-    input  wire       ena,      // will go high when the design is enabled
-    input  wire       clk,      // clock
-    input  wire       rst_n     // reset_n - low to reset
-);
-   wire reset = ! rst_n;
-
-\TLV tt_lab()
-   // Connect Tiny Tapeout I/Os to Virtual FPGA Lab.
-   m5+tt_connections()
-   // Instantiate the Virtual FPGA Lab.
-   m5+board(/top, /fpga, 7, $, , calc)
-   // Label the switch inputs [0..7] (1..8 on the physical switch panel) (top-to-bottom).
-   m5_if(m5_in_fpga, ['m5+tt_input_labels_viz(['"Value[0]", "Value[1]", "Value[2]", "Value[3]", "Op[0]", "Op[1]", "Op[2]", "="'])'])
-
-\TLV
-   /* verilator lint_off UNOPTFLAT */
-   m5_if(m5_in_fpga, ['m5+tt_lab()'], ['m5+calc()'])
-
-\SV
-endmodule
-
-
-   // *******************************************
-   // * For ChipCraft Course                    *
-   // * Replace this file with your own design. *
-   // *******************************************
-
-   use(m5-1.0)
-   var(target, ASIC)   /// Note, the FPGA CI flow will set this to FPGA.
-\SV
-/*
- * Copyright (c) 2023 Your Name
- * SPDX-License-Identifier: Apache-2.0
- */
-
-`define default_netname none
-
-module tt_um_example (
-    input  wire [7:0] ui_in,    // Dedicated inputs
-    output wire [7:0] uo_out,   // Dedicated outputs
-    m5_if_eq(m5_target, FPGA, ['/']['*'])   // The FPGA is based on TinyTapeout 3 which has no bidirectional I/Os (vs. TT6 for the ASIC).
-    input  wire [7:0] uio_in,   // IOs: Bidirectional Input path
-    output wire [7:0] uio_out,  // IOs: Bidirectional Output path
-    output wire [7:0] uio_oe,   // IOs: Bidirectional Enable path (active high: 0=input, 1=output)
-    m5_if_eq(m5_target, FPGA, ['*']['/'])
-    input  wire       ena,
-    input  wire       clk,
-    input  wire       rst_n
-);
-
-  // All output pins must be assigned. If not used, assign to 0.
-  assign uo_out  = ui_in;  // Example: ou_out is ui_in
-  m5_if_eq(m5_target, FPGA, ['/']['*'])   // The FPGA is based on TinyTapeout 3 which has no bidirectional I/Os (vs. TT6 for the ASIC).
-  assign uio_out = 0;
-  assign uio_oe  = 0;
-  m5_if_eq(m5_target, FPGA, ['*']['/'])
-
 endmodule
