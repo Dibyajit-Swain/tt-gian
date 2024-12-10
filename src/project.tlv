@@ -121,7 +121,9 @@
             $digit == 4'b1111
                ? 8'b01110001 :
                  8'b00000000 ; 
-            
+
+
+
             
             
    // Note that pipesignals assigned here can be found under /fpga_pins/fpga.
